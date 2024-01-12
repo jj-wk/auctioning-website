@@ -1,0 +1,236 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 26, 2022 at 12:28 AM
+-- Server version: 10.1.13-MariaDB
+-- PHP Version: 5.6.21
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `auctionsite`
+--
+CREATE DATABASE IF NOT EXISTS `auctionsite` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `auctionsite`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auction`
+--
+
+CREATE TABLE `auction` (
+  `auctionID` int(11) NOT NULL,
+  `itemID` int(11) DEFAULT NULL,
+  `buyerID` int(11) DEFAULT NULL,
+  `sellerID` int(11) DEFAULT NULL,
+  `startPrice` float DEFAULT NULL,
+  `startDate` datetime DEFAULT NULL,
+  `endDate` datetime DEFAULT NULL,
+  `currentOffer` float DEFAULT NULL,
+  `numOfBids`int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buyer`
+--
+
+CREATE TABLE `buyer` (
+  `userName` varchar(50) DEFAULT NULL,
+  `buyerID` int(11) NOT NULL,
+  `wishList` varchar(500) DEFAULT NULL,
+  `currentBids` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item`
+--
+
+CREATE TABLE `item` (
+  `itemID` int(11) NOT NULL,
+  `buyerID` int(11) DEFAULT NULL,
+  `sellerID` int(11) DEFAULT NULL,
+  `itemName` varchar(100) DEFAULT NULL,
+  `itemDetails` varchar(1000) DEFAULT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seller`
+--
+
+CREATE TABLE `seller` (
+  `userName` varchar(50) DEFAULT NULL,
+  `sellerID` int(11) NOT NULL,
+  `currentSales` varchar(500) DEFAULT NULL,
+  `totalProfits` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(255) NOT NULL,
+  `userName` varchar(50) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  `isAdmin` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for table `auction`
+--
+ALTER TABLE `auction`
+  ADD PRIMARY KEY (`auctionID`),
+  ADD KEY `itemID` (`itemID`),
+  ADD KEY `buyerID` (`buyerID`),
+  ADD KEY `sellerID` (`sellerID`);
+
+--
+-- Indexes for table `buyer`
+--
+ALTER TABLE `buyer`
+  ADD PRIMARY KEY (`buyerID`),
+  ADD KEY `userName` (`userName`);
+
+--
+-- Indexes for table `item`
+--
+ALTER TABLE `item`
+  ADD PRIMARY KEY (`itemID`),
+  ADD KEY `buyerID` (`buyerID`),
+  ADD KEY `sellerID` (`sellerID`);
+
+--
+-- Indexes for table `seller`
+--
+ALTER TABLE `seller`
+  ADD PRIMARY KEY (`sellerID`),
+  ADD KEY `userName` (`userName`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`userName`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `auction`
+--
+ALTER TABLE `auction`
+  MODIFY `auctionID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `buyer`
+--
+ALTER TABLE `buyer`
+  MODIFY `buyerID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `item`
+--
+ALTER TABLE `item`
+  MODIFY `itemID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `seller`
+--
+ALTER TABLE `seller`
+  MODIFY `sellerID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `auction`
+--
+ALTER TABLE `auction`
+  ADD CONSTRAINT `auction_ibfk_1` FOREIGN KEY (`itemID`) REFERENCES `item` (`itemID`),
+  ADD CONSTRAINT `auction_ibfk_2` FOREIGN KEY (`buyerID`) REFERENCES `buyer` (`buyerID`),
+  ADD CONSTRAINT `auction_ibfk_3` FOREIGN KEY (`sellerID`) REFERENCES `seller` (`sellerID`);
+
+--
+-- Constraints for table `buyer`
+--
+ALTER TABLE `buyer`
+  ADD CONSTRAINT `buyer_ibfk_1` FOREIGN KEY (`userName`) REFERENCES `user` (`userName`);
+
+--
+-- Constraints for table `item`
+--
+ALTER TABLE `item`
+  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`buyerID`) REFERENCES `buyer` (`buyerID`),
+  ADD CONSTRAINT `item_ibfk_2` FOREIGN KEY (`sellerID`) REFERENCES `seller` (`sellerID`);
+
+--
+-- Constraints for table `seller`
+--
+ALTER TABLE `seller`
+  ADD CONSTRAINT `seller_ibfk_1` FOREIGN KEY (`userName`) REFERENCES `user` (`userName`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Dumping data for tables
+--
+
+INSERT INTO `user` (`id`, `userName`, `password`, `firstName`, `lastName`, `email`, `role`, `isAdmin`) VALUES
+(3, 'JasonB', '12345', 'Jason', 'Bourne', 'ucabtuw@ucl.ac.uk', 'buyer', 0),
+(4, 'EllenR', '12345', 'Ellen', 'Ripley', 'ellen@email.com', 'buyer', 0),
+(5, 'SarahC', '12345', 'Sarah', 'Connor', 'sarah@email.com', 'seller', 0),
+(6, 'IndianaJ', '12345', 'Indiana', 'Jones', 'indiana@email.com', 'seller', 0);
+
+INSERT INTO `seller` (`userName`, `sellerID`, `currentSales`, `totalProfits`) VALUES
+('SarahC', 5, '0', '0'),
+('IndianaJ', 6, '0', '0');
+
+INSERT INTO `buyer` (`userName`, `buyerID`, `wishList`, `currentBids`) VALUES
+('JasonB', 3, '', ''),
+('EllenR', 4, '', '');
+
+INSERT INTO `item` (`itemID`, `buyerID`, `sellerID`, `itemName`, `itemDetails`, `category`, `quantity`) VALUES
+(1, NULL, 6, 'Wooden Door', 'It is a door made of wood. Should fit any regular door fittings. You can come pick it up, but I will not help with installation', 'Home, Garden & DIY', 2),
+(2, NULL, 6, 'iPhone 8s', 'The iPhone 8s is in perfect working condition, although it does have some scratches on the body.', 'Electronics & Computers', 1),
+(3, 4, 6, 'Toy Story 3 DVD', 'This is a classic movie that everyone should watch at least once in their life. Highly recommded.', 'Books, Films & Games', 3),
+(4, 4, 5, 'Bicycle', 'It has two wheels, a frame, and a steering wheel. Pretty much all you look for in a bike. The brakes are a bit iffy but then can be replaced.', 'Sports & Outdoors', 1);
+
+INSERT INTO `auction` (`auctionID`, `itemID`, `buyerID`, `sellerID`, `startPrice`, `startDate`, `endDate`, `currentOffer`, `numOfBids`) VALUES
+(1, 1, NULL, 6, 45, '2022-12-15 13:42:30', '2022-12-16 13:42:00', 34, 0),
+(2, 2, NULL, 6, 650, '2022-12-15 13:42:30', '2022-12-24 11:42:00', 650, 0),
+(3, 3, 4, 6, 6, '2022-12-15 13:42:30', '2022-12-18 18:26:00', 11, 4),
+(4, 4, 4, 5, 55, '2022-12-15 13:42:30', '2022-12-31 23:59:00', 72, 3);
+
+--
+-- Indexes for dumped tables
+--
